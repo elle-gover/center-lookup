@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Nav from '../components/nav'
 import { graphql, buildSchema } from 'graphql'
 
+// GraphQL stuff
 const schema = buildSchema(`
   type Query {
     hello: String
@@ -11,10 +12,21 @@ const schema = buildSchema(`
 
 const root = { hello: () => 'Hello world!' };
 
-//TODO Put this inside of a componentDidMount
-const response = await graphql(schema, '{ hello }', root);
-
 class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      response: ""
+    }
+  }
+
+  async componentDidMount() {
+    const response = await graphql(schema, '{ hello }', root);
+    this.setState((state, props) => {
+      return {response: response.data.hello};
+    });
+  }
+
   render() {
     return (
       <div>
@@ -25,9 +37,9 @@ class Home extends React.Component {
       <Nav />
 
       <div className='hero'>
-        <h1 className='title'>{ response }</h1>
+        <h1 className='title'>{this.state.response}</h1>
         <p className='description'>
-          To get started, edit <code>pages/index.js</code> and save to reload.
+          This is the website that I will make!
         </p>
 
         <div className='row'>
